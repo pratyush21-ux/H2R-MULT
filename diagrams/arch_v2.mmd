@@ -1,0 +1,43 @@
+flowchart LR
+    A["A[15:0] (16 bits)"]
+    Q["Q[15:0] (16 bits)"]
+
+    subgraph MSB["Exact radix-4 MSB block (Q15 to Q6)"]
+        direction LR
+        R4E["Radix-4 Booth encoder<br/>5 groups: (Q7 Q6 Q5) ... (Q15 Q14 Q13)"]
+        R4P["PP generators x5<br/>{0, ±M, ±2M}<br/>PP2 ... PP6"]
+        R4A["Exact adder<br/>weights 2^(2j+6), j = 0...4"]
+        R4S["Shift left by 6<br/>sign-extend 26 to 32"]
+        R4E -- "digits d2...d6" --> R4P
+        R4P -- "5 x 17 bits" --> R4A
+        R4A -- "26 bits" --> R4S
+    end
+
+    subgraph LSB["Approximate radix-8 LSB block (Q5 to Q0)"]
+        direction LR
+        R8E["Radix-8 Booth encoder<br/>2 groups: (Q2 Q1 Q0 0), (Q5 Q4 Q3 Q2)"]
+        R8P["PP generators x2<br/>{0, ±M, ±2M, ±4M}<br/>±3M mapped to ±2M"]
+        PAA["PAA1 carry-free adder<br/>PP0 + PP1 x 2^3<br/>s = a OR b OR c"]
+        R8S["Sign-extend 22 to 32"]
+        R8E -- "digits d0, d1" --> R8P
+        R8P -- "2 x 18 bits" --> PAA
+        PAA -- "22 bits" --> R8S
+    end
+
+    FA["Approximate 32-bit adder<br/>PAA1 cells on low k bits<br/>+ exact upper bits"]
+    P["P[31:0] (32 bits)"]
+
+    Q -- "Q[15:6], 10 bits" --> R4E
+    Q -- "Q[5:0], 6 bits" --> R8E
+    Q -. "Q5 (shared overlap bit)" .-> R4E
+    A -- "16 bits" --> R4P
+    A --> R8P
+    R4S -- "32 bits" --> FA
+    R8S -- "32 bits" --> FA
+    FA -- "32 bits" --> P
+
+    classDef approx fill:#e9e9e9,stroke:#555,stroke-dasharray:5 3
+    classDef exact fill:#ffffff,stroke:#555,stroke-dasharray:5 3
+    class LSB approx
+    class MSB exact
+    class FA approx

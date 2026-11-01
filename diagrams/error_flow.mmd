@@ -1,0 +1,8 @@
+flowchart LR
+    G["Vector generator<br/>24 corner cases +<br/>10^6 random signed pairs<br/>(seed 2026)"]
+    TB["Verilog testbench<br/>hold each vector 3 cycles<br/>sample result"]
+    DUT["H2R-MULT RTL<br/>(v1 or v2)"]
+    CSV["CSV log<br/>A, B, exact, approx, ED"]
+    PY["Metric script<br/>ER, MED, NED, MRED,<br/>NRED, WCE, WCRE, histogram"]
+    OUT["Table 5 values<br/>+ histogram figure"]
+    G --> TB --> DUT --> TB --> CSV --> PY --> OUT

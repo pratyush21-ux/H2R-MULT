@@ -1,0 +1,9 @@
+flowchart LR
+    IMG["Input image<br/>(grayscale 512x512 /<br/>RGB 125x125 ... 2040x1356)"]
+    M1["MATLAB<br/>read pixels, split R/G/B,<br/>write pixels_in.txt (hex)"]
+    TB["Verilog testbench<br/>$readmemh pixels_in.txt<br/>pixel x coefficient"]
+    DUT["H2R-MULT<br/>(exact / v1 / v2)"]
+    TXT["pixels_out.txt<br/>($fwrite per pixel)"]
+    M2["MATLAB<br/>read txt, reshape,<br/>rebuild image"]
+    Q["PSNR, SSIM,<br/>Fig. 4/5/7, Table 7"]
+    IMG --> M1 --> TB --> DUT --> TB --> TXT --> M2 --> Q

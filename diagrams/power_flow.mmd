@@ -1,0 +1,10 @@
+flowchart LR
+    RTL["RTL + Basys-3 XDC<br/>(100 MHz clock)"]
+    SYN["Vivado Synthesis"]
+    IMP["opt / place / route"]
+    SIM["Post-implementation<br/>functional simulation<br/>10,000 random vectors"]
+    SAIF["SAIF file<br/>(switching activity)"]
+    PWR["report_power<br/>read_saif -strip_path tb/uut"]
+    RPT["Total = static + dynamic<br/>LUTs, delay, PDP"]
+    RTL --> SYN --> IMP --> SIM --> SAIF --> PWR --> RPT
+    IMP --> PWR
