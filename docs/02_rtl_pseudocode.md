@@ -96,18 +96,9 @@ FUNCTION PAA1_ADD(a[n-1:0], b[n-1:0]) -> s[n-1:0]
 END
 ```
 
-## 2.5 Segmented final adder (v2)
 
-```
-FUNCTION SEGMENTED_ADDER(x[31:0], y[31:0], k) -> s[31:0]
-    s[k-1:0]  <- PAA1_ADD(x[k-1:0], y[k-1:0])  // approximate low part
-    c_k       <- carry out of PAA1 part
-    s[31:k]   <- x[31:k] + y[31:k] + c_k        // exact high part
-    RETURN s
-END
-```
 
-## 2.6 Exact reference (baseline)
+## 2.5 Exact reference (baseline)
 
 Same structure with all approximations disabled:
 
