@@ -63,9 +63,9 @@ PDP [pJ]            = critical-path delay [ns] x total power [mW]
 
 | Quantity | Value |
 |---|---|
-| LUTs / registers | 394 / 81 |
+| LUTs  | 394  |
 | Critical-path delay | 10.341 ns |
-| Total on-chip power | 111 mW (72 mW static, 39 mW dynamic) |
+| Total on-chip power | 111 mW  |
 | SAIF annotation | 93 % of nets, confidence High |
 | Junction temperature | 25.6 °C |
 | PDP | 1147.851 pJ |
