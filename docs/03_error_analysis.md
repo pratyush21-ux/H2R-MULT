@@ -93,3 +93,17 @@ Statistical confidence: with 10⁶ samples the standard error of the mean metric
 | AxEnMULT-XS [2] | 1.49 | 0.496 | 2.13 × 10⁷ | — | — |
 
 MRED reduction versus AxEnMULT-XS: 84.9 % (v1) and 70.9 % (v2).
+
+## 3.8 Worst-case behaviour and error distribution
+
+| Metric | H²R-MULTv1 | H²R-MULTv2 |
+|---|---|---|
+| ER | 82.2 % | 98.4 % |
+| WCE | 32\|M\| | 32\|M\| |
+| WCRE | ≈ 200 % | 100 % |
+| Median RED | 0.032 % | 0.098 % |
+| Vectors with RED < 1 % | 97.4 % | 95.1 % |
+
+![histogram](../results/Fig_error_histogram.png)
+
+Full table: [results/error_metrics.md](../results/error_metrics.md).

@@ -21,7 +21,7 @@ Seven partial products in total (radix-4: 8, radix-8: 6).
 Two variants:
 
 - **H²R-MULTv1**: exact 32-bit final adder.
-- **H²R-MULTv2**: segmented final adder, PAA1 cells on the low `k` bits, exact upper bits.
+- **H²R-MULTv2**: minimum-hardware variant; the two radix-8 LSB partial products are omitted and Q5 is used only as the reference bit of the first radix-4 group.
 
 ## Repository map
 
@@ -33,6 +33,8 @@ Two variants:
 | [docs/04_hardware_power.md](docs/04_hardware_power.md) | Vivado flow for area, timing and SAIF-based power |
 | [docs/05_image_processing.md](docs/05_image_processing.md) | MATLAB → testbench → MATLAB image pipeline, PSNR/SSIM, latency |
 | [docs/06_verification.md](docs/06_verification.md) | Exactness and bit-overlap verification |
+| [results/](results/) | Error-distribution histogram and worst-case metrics |
+| [Reference/](Reference/) | RTL and testbenches of the compared designs (AxEnMULT-XS, EvoApprox, HBDM-4) |
 | [diagrams/](diagrams/) | Mermaid sources (`.mmd`) and rendered `.svg` / `.png` |
 
 ## Tools

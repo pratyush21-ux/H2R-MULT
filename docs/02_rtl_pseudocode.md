@@ -13,7 +13,7 @@ MODULE H2R_MULT(A[15:0], Q[15:0], clk, rst, load) -> P[31:0], done
         Q5_reg <- Q[5]                          // shared overlap bit, registered with Q
 
     PP_msb[25:0] <- RADIX4_BLOCK(A_reg, Q_reg[15:6], Q5_reg)   // exact, 5 PPs
-    PP_lsb[21:0] <- RADIX8_BLOCK(A_reg, Q_reg[5:0])            // approximate, 2 PPs
+    PP_lsb[21:0] <- RADIX8_BLOCK(A_reg, Q_reg[5:0])            // approximate, 2 PPs (v1 only)
 
     X[31:0] <- sign_extend(PP_msb) << 6         // align radix-4 result to weight 2^6
     Y[31:0] <- sign_extend(PP_lsb)
@@ -21,7 +21,7 @@ MODULE H2R_MULT(A[15:0], Q[15:0], clk, rst, load) -> P[31:0], done
     IF variant == v1:
         S <- X + Y                              // exact 32-bit adder
     ELSE IF variant == v2:
-        S <- SEGMENTED_ADDER(X, Y, k)           // PAA1 on low k bits
+        S <- X                                  // radix-8 LSB partial products omitted
 
     ON rising edge of clk:
         P    <- S
@@ -96,9 +96,18 @@ FUNCTION PAA1_ADD(a[n-1:0], b[n-1:0]) -> s[n-1:0]
 END
 ```
 
+## 2.5 H²R-MULTv2 (minimum-hardware variant)
 
+```
+FUNCTION H2R_MULT_V2(M[15:0], Q[15:0]) -> P[31:0]
+    PP_msb <- RADIX4_BLOCK(M, Q[15:6], Q[5])    // Q5 = reference bit of group 0
+    P      <- sign_extend(PP_msb) << 6          // radix-8 block not instantiated
+    RETURN P
+END
+// error: E = -M * Q_L,  Q_L = signed value of Q[5:0]  ->  |E| <= 32|M|
+```
 
-## 2.5 Exact reference (baseline)
+## 2.6 Exact reference (baseline)
 
 Same structure with all approximations disabled:
 

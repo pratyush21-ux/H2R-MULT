@@ -57,16 +57,28 @@ The 3M and 2M inputs of the partial-product multiplexer share the same shifted o
 
 ![v1](../diagrams/arch_v1.png)
 
-**H²R-MULTv2:** PAA1 cells on the low `k` bits of the final adder
+**H²R-MULTv2:** radix-8 LSB partial products omitted (minimum-hardware variant)
 
 ![v2](../diagrams/arch_v2.png)
 
 | Block | v1 | v2 |
 |---|---|---|
-| Radix-4 MSB block | exact | exact |
-| Radix-8 encoding | ±3M → ±2M | ±3M → ±2M |
-| PP0 + PP1 accumulation | PAA1 | PAA1 |
-| Final 32-bit adder | exact | low `k` bits PAA1, upper bits exact |
+| Radix-4 MSB block (PP2 … PP6) | exact | exact |
+| Q5 overlap bit | radix-8 window + radix-4 reference bit | radix-4 reference bit only |
+| Radix-8 encoding (PP0, PP1) | ±3M → ±2M | omitted |
+| PP0 + PP1 accumulation | PAA1 | omitted |
+| Final 32-bit adder | exact (radix-4 + radix-8 result) | not needed (radix-4 result only) |
+| Partial products | 7 | 5 |
+
+**Error of v2 in closed form.** Since the radix-4 digits reconstruct Q − Q_L, where Q_L = −32·q5 + Σ_{k=0}^{4} q_k·2^k ∈ [−32, 31] is the signed value of the six LSBs, the v2 output is P_v2 = M·(Q − Q_L) and its error is exactly
+
+```
+E_v2 = −M · Q_L,     |E_v2| ≤ 32|M|
+ER   = P(Q_L ≠ 0) = 63/64 = 98.4 %                   (M ≠ 0)
+E|Q_L| = 16  ->  MED = 16 · E|M| ≈ 2.62 × 10^5       (uniform 16-bit operands)
+```
+
+This was confirmed bit-exactly by RTL simulation for all 10^6 test vectors.
 
 ## 1.4 PAA1 cell
 
